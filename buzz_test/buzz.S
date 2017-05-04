@@ -34,7 +34,7 @@ init:   eor         r1, r1                  ; zero out the r1 register
         sts         CLKPR, r24              ; allow access to clock setup
         sts         CLKPR, r1               ; run at full speed
         
-        ; set up the LED port
+        ; set up the buzz port
         sbi         BUZZ_DIR, BUZZ_PIN        ; set buzz pin to output
         cbi         BUZZ_PORT, BUZZ_PIN       ; start with the buzzer off
         ret

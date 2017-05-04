@@ -19,7 +19,7 @@ main:
 	; r20 holds value to alter frequency
 	; value of 180 = tick tick (max distance)
 	; value of 10  = ~4300Hz   (min distance)
-	; Create formula to load r20 within these ranges based on distance values?
+	; Create formula to load r20 within these ranges based on sonar input?
 	ldi	    r20, 10
 ;-------------------------------------------------
 

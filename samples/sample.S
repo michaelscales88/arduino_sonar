@@ -3,12 +3,6 @@
 
 #include "config.h"
 
-; .equ	PIND, 0x09			; the input PIND register
-; .equ	LED_PIN, 5			; Define LED pin on PORTB
-; .equ	TRIGGER, 1			; Trigger Pin
-; .equ	ECHO_PIN, 2				; ECHO_PIN Pin
-; .equ	DELAY, 100			; Delay constant
-
 	.section .text
     .org 0x00
     .global     main

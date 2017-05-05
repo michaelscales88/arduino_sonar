@@ -49,7 +49,10 @@ Details:
 * 8 KB of SRAM and 4 KB of EEPROM 
 * 16 MHz crystal oscillator
 
-The Experiment
+Demonstration
 ==============
+We'll demonstrate our project by using it as a proximity sensor to nearby objects, obstacles, and walls. Audible and visible cues will notify the user as the distance between the obstacle and sensor becomes smaller over time.  
+
+
 
 

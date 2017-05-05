@@ -13,6 +13,14 @@ PING))) Ultrasonic Distance Sensor
     :align: center
     :height: 323px
 
+The PING))) sensor works by transmitting an ultrasonic burst and providing an output pulse that corresponds to the time required for the burst echo to return to the
+sensor. By measuring the echo pulse width, the distance to target can easily be calculated. 
+
+.. image:: method.jpg
+    :width: 633px
+    :align: center
+    :height: 243px
+
 Features:
 
 * Provides precise, non-contact distance measurements within a 2 cm to 3 m range

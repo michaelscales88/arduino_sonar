@@ -9,7 +9,7 @@
 
 #define SONAR_DIR       _DDRD
 #define SONAR_PORT      _PORTD
-#define TRIGGER_PIN     1
-#define ECHO_PIN        2               ; echo pin
+#define TRIGGER_PIN     1               ; initial signal
+#define ECHO_PIN        2               ; return signal
 
 #define DELAY           100             ; delay constant

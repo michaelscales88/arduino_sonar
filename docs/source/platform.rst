@@ -58,4 +58,4 @@ Block diagram:
     :align: center
     :height: 770px
 
-'reference <http://www.microchip.com/wwwproducts/en/ATmega2560>'_
+`reference <http://www.microchip.com/wwwproducts/en/ATmega2560>`_

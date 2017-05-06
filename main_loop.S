@@ -4,7 +4,7 @@
 
     .section    .text
     .global     main_loop
-    .extern     buzz
+;    .extern     buzz
 
 main_loop:
 1:

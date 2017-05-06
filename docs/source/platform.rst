@@ -58,4 +58,7 @@ Block diagram:
     :align: center
     :height: 770px
 
+
+The Atmel AVR core combines a rich instruction set with 32 general purpose working registers. All the 32 registers are directly connected to the Arithmetic Logic Unit (ALU), allowing two independent registers to be accessed in one single instruction executed in one clock cycle. The resulting architecture is more code efficient while achieving throughputs up to ten times faster than conventional CISC microcontrollers.
+
 `reference <http://www.microchip.com/wwwproducts/en/ATmega2560>`_

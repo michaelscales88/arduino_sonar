@@ -1,0 +1,20 @@
+led_task make signal_task
+        --trigger
+        --detect
+
+buzz_task - modify to read echo time
+
+tasks in timer
+trigger/echo
+beep the buzzer
+change LED
+
+delay 2
+trigger
+delay 10
+echo
+delay 1000
+
+read echo value ->
+set buzz delay
+set LED

@@ -1,0 +1,95 @@
+; signal_task.S - setup and control for trigger and echo
+; the HC-SR04!!!
+
+; from http://www.ezdenki.com/ultrasonic.php :
+; Basic Distance Calculation for Ultrasonic Sensing
+; The speed of sound: 340.29 m/s (meters per second).
+; The speed of sound to an object and back: 170.15 m/s.
+; Converting from m/s to µs/cm:
+;           s        m     1x106µs   58.772µs
+;        ------- X ----- X ------- = --------
+;        170.15m   100cm      s         cm
+; Time for pulse to travel 1cm and return: 58.772µs.
+
+#include "config.inc"
+
+.equ	zero,		0
+
+.equ	dur1, 10
+.equ	dur2, 100
+.equ	dur3, 1000
+
+; per clock.S, we're running at 1MHz
+; 1 MHz (or 1 M clk/s) =
+; 1 clk/us
+; 1 clk/us * 58.772us/cm = 58.772clk/cm
+
+; # of clicks from start of echo going to high and then starting
+; wait = 6
+; # of clicks of wait = 2(r17) + 1
+; so, 58.772clk/cm or 59 = 2(x) + 1 + 6, x = 26
+
+.equ	one_cm, 26
+
+; wait subroutine takes ~2 clks per iteration
+.equ	delay2, 1					; 1 clk/us * 1
+.equ	delay10, 5					; 1 clk/us * 5
+
+.section .data
+cm:
+	.byte		8
+
+.section .text
+    .global     signal_init
+    .global     signal_task
+	.global		cm
+
+signal_init:
+    sbi     SIGNAL_DIR, TRIG
+    cbi     SIGNAL_DIR, ECHO
+
+;	sbi		LED_DIR, LED1
+;	cbi		LED_PORT, LED1
+
+    ret
+
+; data sheet for HC-SR04 call for the trigger to be on low, set to high
+; for 10us, then set to low again, the echo pin will be set to low, switch to
+; high when the pulse is sent and go back to low again once the sound wave is
+; received
+signal_task:
+;	sbi		LED_PORT, LED1
+	cbi		SIGNAL_PORT, TRIG	; set trigger low
+	ldi		r17, delay2				; set r17 to delay2, for 2 clks(2 us)
+	call	wait					; wait 2us
+
+	sbi		SIGNAL_PORT, TRIG	; set high
+	ldi		r17, delay10			; set r17 to delay10, for 10 clks(10 us)
+	call	wait					; wait 10us
+
+	cbi		SIGNAL_PORT, TRIG	; set back to low
+
+wait_for_echo:
+	sbis	SIGNAL_PORT, ECHO		; need to wait for start of echo to start
+	rjmp	wait_for_echo			; not set? keep waiting
+
+get_echo:
+	clr		r18						; clear counter
+start:
+	inc		r18						; increment counter
+	tst		r18						; is counter 0?
+	breq	done					; if overflow, r18 will be 0, exit
+
+	ldi		r17, one_cm				; load r17 with one_cm value
+	call	wait         			; wait # clks for one cm
+
+	sbic	SIGNAL_PORT, ECHO		; skip to done if echo received
+	rjmp	start					; repeat if not clear
+done:
+	sts		cm, r18
+    ret
+
+wait:
+	dec      r17
+	brne     wait
+	ret

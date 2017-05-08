@@ -1,4 +1,4 @@
-PING))) Ultrasonic Distance Sensor 
+HC-SR04 Ultrasonic Sensor
 ===================================
 
 .. image:: ping_sonar.jpg
@@ -6,8 +6,9 @@ PING))) Ultrasonic Distance Sensor
     :align: center
     :height: 323px
 
-The PING))) sensor works by transmitting an ultrasonic burst and providing an output pulse that corresponds to the time required for the burst echo to return to the
-sensor. By measuring the echo pulse width, the distance to target can easily be calculated. 
+The HC-SR04 Ultrasonic Module has 4 pins, Ground, VCC, Trig and Echo. The Ground and the VCC pins of the module needs to be connected to the Ground and the 5 volts pins on the Arduino Board respectively and the trig and echo pins to any Digital I/O pin on the Arduino Board.
+
+The sensor works by transmitting an ultrasonic burst at a frequency of 40,000Hz and providing an output pulse that corresponds to the time required for the burst echo to return to the sensor. By measuring the echo pulse width, the distance to target can easily be calculated. 
 
 .. image:: method.jpg
     :width: 633px
@@ -23,9 +24,10 @@ Features:
 Details: 
 
 * Range: approximately 1 inch to 10 feet (2 cm to 3 m)
-* 3-pin male header with 0.1" spacing
+* 4-pin male header
 * Power requirements: +5 VDC; 35 mA active
 * Dimensions: 0.81 x 1.8 x 0.6 in (22 x 46 x 16 mm)
+
 
 Arduino MEGA 2560
 ==================

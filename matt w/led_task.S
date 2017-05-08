@@ -2,9 +2,15 @@
 
 #include "config.inc"
 
-.equ	near,	5
-.equ	middle, 10
-.equ	far,	20
+.equ	near,	10
+.equ	middle,	80
+.equ	far,	160
+
+#DEFINE	r18 = near
+#DEFINE	r19 = middle
+#DEFINE	r20 = far
+
+#DEFINE r30 = LED
 
 .section .text
 	.global led_init
@@ -12,33 +18,27 @@
 	.extern	cm
 
 led_init:
+	sbi     LED_DIR, LED0
+	cbi	LED_PORT, LED0
+
 	sbi     LED_DIR, LED1
-	cbi		LED_PORT, LED1
-	;sbi		LED_PORT, LED1
+	cbi	LED_PORT, LED1
 
 	sbi     LED_DIR, LED2
-	cbi		LED_PORT, LED2
-
-	sbi     LED_DIR, LED3
-	cbi		LED_PORT, LED3
+	cbi	LED_PORT, LED2
 
 	ret
 
 led_task:
-	sbi		LED_PORT, LED1
-	lds		r17, 20
+	lds	r17, cm
 
-	sbi		LED_PORT, LED1
-	cp		r17, near
-	brlo	done
+	cpi	r17, near
 
-	sbi		LED_PORT, LED2
-	cp		r17, middle
-	brlo	done
-
-	sbi		LED_PORT, LED3
-	cp		r17, far
-	brlo	done
-
+	brsh	one
+	cbi	LED_PORT, LED0
+	rjmp	done
+one:
+	sbi	LED_PORT, LED0
+	rjmp	done
 done:
 	ret

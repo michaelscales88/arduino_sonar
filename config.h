@@ -12,4 +12,5 @@
 #define TRIGGER_PIN     1               ; initial signal
 #define ECHO_PIN        2               ; return signal
 
-#define DELAY           100             ; delay constant
+#define PULSE_DELAY           100             ; 10ms pulse delay cycling trigger on and off
+#define MAX_DELAY             200             ; this needs to account for a 60ms delay between triggers

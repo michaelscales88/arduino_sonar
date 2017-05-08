@@ -15,24 +15,37 @@ main:
 
 ; main loop
 main_loop:
-	call		Trigger_ON					; send HIGH to the TRIGGER
-	call		System_Delay				; wait for 0.6ms
+	; 60ms per total pulse cycle -> outer loop
+	eor			r21,	r21					; 60 ms delay for outer loop
+	eor			r22,	r22					; counter for distance
 
 	call		Trigger_OFF					; send LOW to the TRIGGER
-	call		System_Delay				; wait for 0.6ms
+1:	ldi			r16, 2						;	2 microsecond delay
+	dec			r16
+	brnz		1b
+	call		Trigger_ON					; send HIGH to the TRIGGER -> Start count
+2:	ldi			r16, 10						;	10 microsecond delay
+	dec			r16
+	brnz		2b
+	call		Trigger_OFF					; send LOW to the TRIGGER
+	ldi			r21, 53						; 60 ms is approx 72000 clks
+	.trigger:
+	; whenever we fire the trigger HIGH and then LOW the state of the PIND changes according if
+	; the ECHO_PIN bit is HIGH or LOW, so all we need is to get the state of the PIND register
+	; and according to its state to skip related instructions
 
-; whenever we fire the trigger HIGH and then LOW the state of the PIND changes according if
-; the ECHO_PIN bit is HIGH or LOW, so all we need is to get the state of the PIND register
-; and according to its state to skip related instructions
+;		sbic		SONAR_PORT, ECHO_PIN        ; skip next instruction if the ECHO_PIN bit is LOW
+;		cbi	    	LED_PORT, LED_PIN		    ; clear the LED bit in the PORTB register
 
-	sbic		SONAR_PORT, ECHO_PIN        ; skip next instruction if the ECHO_PIN bit is LOW
-	cbi	    	LED_PORT, LED_PIN		    ; clear the LED bit in the PORTB register
-
-	sbis		SONAR_PORT, ECHO_PIN		; skip next instruction if the ECHO_PIN bit is HIGH
-	sbi	    	LED_PORT, LED_PIN		    ; set the LED bit in the PORTB register
-
-	call		System_Delay			   	; another 0.6ms delay
-    jmp			main_loop			        ; repeat the loop
+		sbis		SONAR_PORT, ECHO_PIN		; skip next instruction if the ECHO_PIN bit is HIGH
+		jmp			.done
+;		sbi	    	LED_PORT, LED_PIN		    ; set the LED bit in the PORTB register
+		add			r22		8					; counting cycles
+		sub			r21,	8					; checking if 60ms have elapsed
+		brnz		.trigger					; loop until 60 ms elapses
+	.done:
+		; this is where the led light get's toggled for < the right distance
+	jmp			main_loop			        ; repeat the loop
 	ret
 
 ; initializing the I/O
@@ -51,19 +64,19 @@ System_Delay:
 SD_L1:
 	ldi			r18, DELAY					; inner loop
 SD_L2:
-	dec        	r18						; use R17 as a parameter -> decrement it
-	brne       	SD_L2					; if not ZERO -> keep decrementing
+	dec        	r18							; use R17 as a parameter -> decrement it
+	brne       	SD_L2						; if not ZERO -> keep decrementing
 	dec	       	r17
 	brne	   	SD_L1
 	ret
 
 ; trigger routines
 Trigger_ON:
-	sbi			SONAR_PORT, TRIGGER_PIN			; set the trigger bit in PORTD HIGH
+	sbi			SONAR_PORT, TRIGGER_PIN		; set the trigger bit in PORTD HIGH
 	ret
 
 Trigger_OFF:
-	cbi			SONAR_PORT, TRIGGER_PIN			; set the trigger bit in PORTD LOW
+	cbi			SONAR_PORT, TRIGGER_PIN		; set the trigger bit in PORTD LOW
 	ret
 
 toggle:

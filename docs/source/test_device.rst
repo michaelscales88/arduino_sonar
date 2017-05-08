@@ -17,7 +17,6 @@ Pins:
 * Trigger pulse input
 * 0V 
 
-
 Cycle:
 
 * 1. Using IO trigger for at least 10us high level signal
@@ -29,7 +28,14 @@ Cycle:
     :align: center
     :height: 387px
 
+`reference <http://www.micropik.com/PDF/HCSR04.pdf>`_
+
 In order to generate the ultrasound you need to set the Trig on a High State for 10 µs. That will send out an 8 cycle sonic burst which will travel at the speed sound and it will be received in the Echo pin. The Echo pin will output the time in microseconds the sound wave traveled.
+
+In order to calculate the distance, take the width of the echo pulse (μs):
+
+* Distance in centimeters: time(μs) / 58
+* Distance in inches: time(μs) / 148
 
 The ultrasonic distance sensor can be used in a wide variety of applications. Many people utilize the sensor to build projects that can move around and avoid obstacles, accurately measure distances, and notify about incoming objects.
 

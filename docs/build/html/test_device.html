@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Test Device &#8212; Team Alpha Group Project 2 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="development_tools.html" />
+    <link rel="prev" title="Microcontroller Platform" href="platform.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-test-device">
+<h1>The Test Device<a class="headerlink" href="#the-test-device" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="hc-sr04-ultrasonic-sensor">
+<h2>HC-SR04 Ultrasonic Sensor<a class="headerlink" href="#hc-sr04-ultrasonic-sensor" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/PINGsensor.jpg"><img alt="_images/PINGsensor.jpg" class="align-center" src="_images/PINGsensor.jpg" style="width: 379px; height: 178px;" /></a>
+<p>Pins:</p>
+<ul class="simple">
+<li>5V Supply</li>
+<li>Echo pulse output</li>
+<li>Trigger pulse input</li>
+<li>0V</li>
+</ul>
+<p>Cycle:</p>
+<ul class="simple">
+<li><ol class="first arabic">
+<li>Using IO trigger for at least 10us high level signal</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="2">
+<li>The Module automatically sends eight 40 kHz and detect whether there is a pulse signal back.</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="3">
+<li>If the signal is read, the time of high output IO duration is the time from sending ultrasonic to returning.</li>
+</ol>
+</li>
+</ul>
+<a class="reference internal image-reference" href="_images/Ultrasonic-Diagram.png"><img alt="_images/Ultrasonic-Diagram.png" class="align-center" src="_images/Ultrasonic-Diagram.png" style="width: 960px; height: 387px;" /></a>
+<p><a class="reference external" href="http://www.micropik.com/PDF/HCSR04.pdf">reference</a></p>
+<p>In order to generate the ultrasound you need to set the Trig on a High State for 10 µs. That will send out an 8 cycle sonic burst which will travel at the speed sound and it will be received in the Echo pin. The Echo pin will output the time in microseconds the sound wave traveled.</p>
+<p>In order to calculate the distance, take the width of the echo pulse (μs):</p>
+<ul class="simple">
+<li>Distance in centimeters: time(μs) / 58</li>
+<li>Distance in inches: time(μs) / 148</li>
+</ul>
+<p>The ultrasonic distance sensor can be used in a wide variety of applications. Many people utilize the sensor to build projects that can move around and avoid obstacles, accurately measure distances, and notify about incoming objects.</p>
+<p>Car backup sensors and high-end side mirrors use ultrasonic sensors to notifiy of nearby cars and objects. Sound waves above 20kHz (well above human hearing) are sent out in pulses and then the reflection of these pulses are timed and then used to measure distances. Sometimes these pulses are in excess of 100dB to ensure clear reception (wow!).</p>
+<a class="reference internal image-reference" href="_images/Fig1_popup.jpg"><img alt="_images/Fig1_popup.jpg" class="align-center" src="_images/Fig1_popup.jpg" style="width: 800px; height: 584px;" /></a>
+<p><a class="reference external" href="http://www.newelectronics.co.uk/electronics-technology/an-introduction-to-ultrasonic-sensors-for-vehicle-parking/24966/">reference</a></p>
+</div>
+<div class="section" id="breadboard">
+<h2>Breadboard<a class="headerlink" href="#breadboard" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/breadboard.jpg" src="_images/breadboard.jpg" />
+<p>The breadboard is a re-useable platform used for mounting components. It consists of a number of small holes that are interconnected beneath the surface. When components are pushed into these holes, they create circuit connections, thereby avoiding the need for soldering.</p>
+</div>
+<div class="section" id="leds">
+<h2>LEDs<a class="headerlink" href="#leds" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/leds.jpeg" src="_images/leds.jpeg" />
+<p>LEDs or light-emitting diodes are a two-lead semiconductor light source. When a suitable voltage is applied to the leads, electrons are able to recombine with electron holes within the device, releasing energy in the form of photons. The different colors seen in our project are due to the tinting of the led enclosure.</p>
+</div>
+<div class="section" id="jumper-wires">
+<h2>Jumper Wires<a class="headerlink" href="#jumper-wires" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/jumper_wires.jpg" src="_images/jumper_wires.jpg" />
+<p>Fairly self-explanatory, jumper wires are used to make connections within the breadboard and to the arduino device itself. They consist of a length of wire with fixed ends terminating in plugs.</p>
+</div>
+<div class="section" id="piezo-buzzer">
+<h2>Piezo Buzzer<a class="headerlink" href="#piezo-buzzer" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/buzzer.jpeg" src="_images/buzzer.jpeg" />
+<p>The buzzer consists of a small piezoelectric crystal in a plastic enclosure. When an electrical current is run across the crystal, it flexes in response. By rapidly toggling the current, the crystal flexes and relaxes, displacing air in the plastic enclosure and creating a buzzing sound. The tone of the buzzing sound can be changed by modifying how quickly the current toggles.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The Test Device</a><ul>
+<li><a class="reference internal" href="#hc-sr04-ultrasonic-sensor">HC-SR04 Ultrasonic Sensor</a></li>
+<li><a class="reference internal" href="#breadboard">Breadboard</a></li>
+<li><a class="reference internal" href="#leds">LEDs</a></li>
+<li><a class="reference internal" href="#jumper-wires">Jumper Wires</a></li>
+<li><a class="reference internal" href="#piezo-buzzer">Piezo Buzzer</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="platform.html" title="previous chapter">Microcontroller Platform</a></li>
+      <li>Next: <a href="development_tools.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/test_device.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, John Bradshaw, Nicholas Moore, Michael Scales, Matthew Wiederaenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/test_device.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

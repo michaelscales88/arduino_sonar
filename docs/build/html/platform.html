@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Microcontroller Platform &#8212; Team Alpha Group Project 2 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Test Device" href="test_device.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="microcontroller-platform">
+<h1>Microcontroller Platform<a class="headerlink" href="#microcontroller-platform" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="arduino-mega-2560">
+<h2>Arduino Mega 2560<a class="headerlink" href="#arduino-mega-2560" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.arduino.cc/en/uploads/Main/arduino-mega2560-schematic.pdf">schematic</a></p>
+<p>The Arduino Mega can be purchased in a variety of places. You can find used boards on eBay for as low as $5 or $20-$30 for new branded boards. There are several off-brand replicas that can be purchased for much less.</p>
+<a class="reference internal image-reference" href="_images/layout.png"><img alt="_images/layout.png" class="align-center" src="_images/layout.png" style="width: 678px; height: 425px;" /></a>
+<p>There are 54 digital input/output pins (of which 14 can be used as PWM outputs) available for use,
+16 analog inputs, 4 UARTs (hardware serial ports), a 16 MHz crystal oscillator, a USB
+connection, a power jack, an ICSP header, and a reset button. It contains everything
+needed to support the microcontroller; simply connect it to a computer with a USB cable or
+power it with a AC-to-DC adapter or battery to get started.</p>
+</div>
+<div class="section" id="input-output">
+<h2>Input/Output<a class="headerlink" href="#input-output" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Serial: 0 (RX) and 1 (TX); Serial 1: 19 (RX) and 18 (TX); Serial 2: 17 (RX) and 16 (TX); Serial 3: 15 (RX) and 14 (TX). Used to receive (RX) and transmit (TX) TTL serial data. Pins 0 and 1 are also connected to the corresponding pins of the ATmega8U2 USB-to-TTL Serial chip.</li>
+<li>External Interrupts: 2 (interrupt 0), 3 (interrupt 1), 18 (interrupt 5), 19 (interrupt 4), 20 (interrupt 3), and 21 (interrupt 2). These pins can be configured to trigger an interrupt on a low value, a rising or falling edge, or a change in value.</li>
+<li>SPI: 50 (MISO), 51 (MOSI), 52 (SCK), 53 (SS). These pins support SPI communication, which, although provided by the underlying hardware, is not currently included in the Arduino language. The SPI pins are also broken out on the ICSP header, which is physically compatible with the Duemilanove and Diecimila.</li>
+<li>LED: 13. There is a built-in LED connected to digital pin 13. When the pin is HIGH value, the LED is on, when the pin is LOW, it&#8217;s off.</li>
+<li>AREF. Reference voltage for the analog inputs.</li>
+<li>Reset. Bring this line LOW to reset the microcontroller. Typically used to add a reset button to shields which block the one on the board.</li>
+</ul>
+<p><a class="reference external" href="http://www.mantech.co.za/datasheets/products/A000047.pdf">reference</a></p>
+</div>
+<div class="section" id="processor">
+<h2>Processor<a class="headerlink" href="#processor" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/atmega2560.png"><img alt="_images/atmega2560.png" class="align-center" src="_images/atmega2560.png" style="width: 369px; height: 343px;" /></a>
+<ul class="simple">
+<li>The high-performance, low-power Microchip 8-bit AVR RISC-based microcontroller combines 256KB ISP flash memory, 8KB SRAM, 4KB EEPROM, 86 general purpose I/O lines, 32 general purpose working registers, real time counter, six flexible timer/counters with compare modes, PWM, 4 USARTs, byte oriented 2-wire serial interface, 16-channel 10-bit A/D converter, and a JTAG interface for on-chip debugging. The device achieves a throughput of 16 MIPS at 16 MHz and operates between 4.5-5.5 volts.</li>
+</ul>
+<p>Block diagram:</p>
+<a class="reference internal image-reference" href="_images/block.jpg"><img alt="_images/block.jpg" class="align-center" src="_images/block.jpg" style="width: 894px; height: 770px;" /></a>
+<p>The Atmel AVR core combines a rich instruction set with 32 general purpose working registers. All the 32 registers are directly connected to the Arithmetic Logic Unit (ALU), allowing two independent registers to be accessed in one single instruction executed in one clock cycle. The resulting architecture is more code efficient while achieving throughputs up to ten times faster than conventional CISC microcontrollers.</p>
+<p><a class="reference external" href="http://www.microchip.com/wwwproducts/en/ATmega2560">reference</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Microcontroller Platform</a><ul>
+<li><a class="reference internal" href="#arduino-mega-2560">Arduino Mega 2560</a></li>
+<li><a class="reference internal" href="#input-output">Input/Output</a></li>
+<li><a class="reference internal" href="#processor">Processor</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="test_device.html" title="next chapter">The Test Device</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/platform.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, John Bradshaw, Nicholas Moore, Michael Scales, Matthew Wiederaenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/platform.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

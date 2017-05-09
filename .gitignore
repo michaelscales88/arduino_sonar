@@ -1,0 +1,13 @@
+# swap files
+*.swp
+
+# object files
+*.o
+
+# hex files
+*.hex
+
+# elf files
+*.elf
+
+

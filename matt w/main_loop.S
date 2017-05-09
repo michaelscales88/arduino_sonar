@@ -5,7 +5,7 @@
 
     	.extern     	signal_task
 	.extern		led_task
-    	;.extern     	buzz_task
+    	.extern     	buzz_task
     	;.extern	LCD_task
 
 main_loop:
@@ -18,7 +18,7 @@ main_loop:
 	call		signal_task
 	call		led_task
 
-    	;call		buzz_task
+    	call		buzz_task
     	;call		LCD_task
 
     	;in          r24, SIGNAL_PORT           ; get current bits

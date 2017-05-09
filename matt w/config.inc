@@ -20,3 +20,7 @@
 
 #define T0		5
 #define T1		7
+
+#define BUZZ_PIN        6
+#define BUZZ_DIR        _DDRB
+#define BUZZ_PORT       _PORTB

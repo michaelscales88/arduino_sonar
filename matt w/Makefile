@@ -4,8 +4,8 @@ TARGET	= app
 INTTBL	= FALSE
 
 # uncomment the line indicating your board
-BOARD	= UNO
-#BOARD	= MEGA
+#BOARD	= UNO
+BOARD	= MEGA
 
 # uncomment one of these lines (check for your system)
 #PORT	= COM12

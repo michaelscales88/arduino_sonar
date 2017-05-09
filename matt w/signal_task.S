@@ -23,11 +23,11 @@
 
 #include "config.inc"
 
-.equ	one_cm, 6
+.equ	one_cm, 76
 
 ; wait subroutine takes ~2 clks per iteration
-.equ	delay2, 2				; 1 clk/us * 1
-.equ	delay10, 10				; 1 clk/us * 10
+.equ	delay2, 4				; 1 clk/us * 1
+.equ	delay10, 20				; 1 clk/us * 10
 
 .section .data
 cm:
@@ -55,6 +55,8 @@ signal_init:
 ; received
 signal_task:
 
+	cbi	SIGNAL_PORT, ECHO
+
 	cbi	SIGNAL_PORT, TRIG	; set trigger low
 	ldi	r17, delay2		; set r17 to delay2, for 2 clks(2 us)
 	call	wait			; wait 2us
@@ -65,29 +67,29 @@ signal_task:
 
 	cbi	SIGNAL_PORT, TRIG	; set back to low
 
-	sbi	SIGNAL_PORT, T0
-
 wait_for_echo:
-	sbis	SIGNAL_PORT, ECHO	; need to wait for start of echo to start
+	sbi	SIGNAL_PORT, T0
+	sbis	SIGNAL_PIN, ECHO	; need to wait for start of echo to start
 	rjmp	wait_for_echo		; not set? keep waiting
 
 	sbi	SIGNAL_PORT, T1
 
-;get_echo:
-;	clr	r18			; clear counter
-;start:
-;	inc	r18			; increment counter
-;
-;	tst	r18			; is counter 0?
-;	breq	done			; if overflow, r18 will be 0, exit
-;
-;	ldi	r17, one_cm		; load r17 with one_cm value
-;	call	wait         		; wait # clks for one cm
-;
-;	sbic	SIGNAL_PORT, ECHO	; skip to done if echo clear
-;	rjmp	start			; repeat if not clear
-;done:
-	;sts	cm, r18
+get_echo:
+	clr	r18			; clear counter
+	;lds	r18, 10
+start:
+	inc	r18			; increment counter
+
+	tst	r18			; is counter 0?
+	breq	done			; if overflow, r18 will be 0, exit
+
+	ldi	r17, one_cm		; load r17 with one_cm value
+	call	wait         		; wait # clks for one cm
+
+	sbic	SIGNAL_PIN, ECHO	; skip to done if echo clear
+	rjmp	start			; repeat if not clear
+done:
+	sts	cm, r18
     	ret
 
 ; wait subroutine

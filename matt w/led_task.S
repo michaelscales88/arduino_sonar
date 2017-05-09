@@ -2,7 +2,7 @@
 
 #include "config.inc"
 
-.equ	near,	10
+.equ	near,	15
 .equ	middle,	80
 .equ	far,	160
 
@@ -33,12 +33,13 @@ led_task:
 	lds	r17, cm
 
 	cpi	r17, near
-
-	brsh	one
+	brlo	one
 	cbi	LED_PORT, LED0
 	rjmp	done
+
 one:
 	sbi	LED_PORT, LED0
 	rjmp	done
+
 done:
 	ret

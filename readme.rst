@@ -5,11 +5,9 @@ Readme
 To run the project
 ===================
 
-Under the project directory, type:
+Under the project directory, do:
 
-make clean
-make
-make load
+make clean -> make -> make load
 
 This should load the program onto your arduino
 

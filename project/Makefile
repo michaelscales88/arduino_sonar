@@ -2,7 +2,6 @@
 
 TARGET	= group_project2
 
-CFILES = ping_test.c
 
 INTTBL	= FALSE
 

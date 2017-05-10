@@ -2,6 +2,11 @@
 Readme
 ==========
 
+Group Project 2 Members
+=======================
+
+John Bradshaw, Michael Scales, Matthew Wiederaenders, Nicholas Moore
+
 To run the project
 ===================
 

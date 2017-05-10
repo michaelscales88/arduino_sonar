@@ -3,9 +3,8 @@
 .section    .text
     .global    main_loop
     .extern    signal_task
-    ;.extern    led_task
-    ;.extern    buzz_task
-    ;.extern	LCD_task
+    .extern    led_task
+    .extern    buzz_task
 
 main_loop:
 1:
@@ -15,7 +14,7 @@ main_loop:
 
     ; give all tasks a chance to run
     call	signal_task           ; measure the time from trigger to echo
-    ;call	led_task              ; illuminate lights corresponding to distance
+    call	led_task              ; illuminate lights corresponding to distance
     call	buzz_task             ; create audible indicator of distance
 
     ; reset the trigger variable

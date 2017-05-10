@@ -1,20 +1,17 @@
-# Makefile for Buzzzzz
+TARGET	= app
 
-TARGET	= group_project2
-
-
+# do you need the interrupt table in this code
 INTTBL	= FALSE
 
-# board definition
-#BOARD   = UNO
-BOARD  = MEGA
+# uncomment the line indicating your board
+#BOARD	= UNO
+BOARD	= MEGA
 
-# uncomment one of these linesand check for your system:
+# uncomment one of these lines (check for your system)
 #PORT	= COM12
 #PORT	= /dev/ttyACM0
-PORT	= /dev/cu.usbmodem1421
+PORT	= /dev/cu.usbmodem1411		# left USB Port
+#PORT	= /dev/cu.usbmodem1421		# right USB Port
 
-# uncomment one of thes elines
 MAKE_BASE = ../
-#MAKE_BASE = /usr/local/
-include $(MAKE_BASE)include/AVRMakefile.mak
+include $(MAKE_BASE)include/AVRMaster.mk

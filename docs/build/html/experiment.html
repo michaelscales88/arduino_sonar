@@ -53,10 +53,57 @@
 <h2>Board Setup<a class="headerlink" href="#board-setup" title="Permalink to this headline">¶</a></h2>
 <p>The board is generally setup according to the diagram below:</p>
 <img alt="_images/circuit_diagram.jpg" src="_images/circuit_diagram.jpg" />
-<p>It consists of an arduino connected to a breadboard, which holds three LEDs (red, yellow, green), an ultrasonic senosr, and a piezo buzzer.</p>
+<p>It consists of an arduino connected to a breadboard, which holds 8 LEDs (red, yellow, green), an ultrasonic senosr, and a piezo buzzer.</p>
 </div>
 <div class="section" id="function">
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+<p>After initializing the components on the board, the ultrasonic sensor sends out a pulse and waits for the echo to bounce back. Based on how long this takes, it calculates the distance in centimeters based on clock cycles using the following formula:</p>
+<p>Time for pulse to travel 1cm and return: 58.772 us</p>
+<p>4 MHz = 4 clk/us or about 236 clk/cm</p>
+<p>wait = 6, # of clks of wait = 2(r17) + 1</p>
+<p>Therefore 236 = 3(x) + 7, x = 76 clks/cm</p>
+<p>This value is then stored in the global variable cm. Based on this value, the LEDs activate according to the following table</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">LEDs Activated</th>
+<th class="head">Distance (cm)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>8</td>
+<td>&lt; 10</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>10 - 20</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>20 - 30</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>30 - 40</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>40 - 50</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>50 - 60</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>60 - 70</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>70 - 80</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>&lt; 80</td>
+</tr>
+</tbody>
+</table>
+<p>The buzzer is activated in a similar fashion, with the delay between successive clicks of the buzzer being determined by the value held in cm. The result is a device that indicates both audibly and visually how far away an object is.</p>
 </div>
 </div>
 

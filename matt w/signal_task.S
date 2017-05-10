@@ -34,9 +34,9 @@ cm:
 	.byte		8
 
 .section .text
-    .global     signal_init
-    .global     signal_task
-	.global		cm
+    	.global     signal_init
+    	.global     signal_task
+    	.global		cm
 
 signal_init:
 	sbi	SIGNAL_DIR, TRIG
@@ -45,37 +45,37 @@ signal_init:
 	sbi	SIGNAL_DIR, T0
 	cbi	SIGNAL_PORT, T0
 
-    ret
+    	ret
 
 ; data sheet for HC-SR04 call for the trigger to be on low, set to high
 ; for 10us, then set to low again, the echo pin will be set to high as soon as
 ; the trigger pin goes to low again, and stays high until
 signal_task:
 
-	cbi		SIGNAL_PORT, ECHO
+	cbi	SIGNAL_PORT, ECHO
 
-	cbi		SIGNAL_PORT, TRIG	; set trigger low
-	ldi		r17, delay2		; set r17 to delay2, for 2 clks(2 us)
+	cbi	SIGNAL_PORT, TRIG	; set trigger low
+	ldi	r17, delay2		; set r17 to delay2, for 2 clks(2 us)
 	call	wait			; wait 2us
 
 	call	buzz_task
-	sbi		SIGNAL_PORT, TRIG	; set high
-	ldi		r17, delay10		; set r17 to delay10, for 10 clks(10 us)
+	sbi	SIGNAL_PORT, TRIG	; set high
+	ldi	r17, delay10		; set r17 to delay10, for 10 clks(10 us)
 	call	wait			; wait 10us
 
-	cbi		SIGNAL_PORT, TRIG	; set back to low
+	cbi	SIGNAL_PORT, TRIG	; set back to low
 
 wait_for_echo:
 	sbis	SIGNAL_PIN, ECHO	; need to wait for start of echo to start
 	rjmp	wait_for_echo		; not set? keep waiting
 
-	sbi		SIGNAL_PORT, T0
+	sbi	SIGNAL_PORT, T0
 
 get_echo:
-	clr		r18				; clear counter
+	clr	r18				; clear counter
 start:
-	inc		r18				; increment counter
-	tst		r18				; is counter 0?
+	inc	r18				; increment counter
+	tst	r18				; is counter 0?
 	breq	done			; if overflow, r18 will be 0, exit
 
 	ldi	r17, one_cm			; load r17 with one_cm value

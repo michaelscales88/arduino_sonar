@@ -10,8 +10,8 @@
 main_loop:
 1:
     lds	        r16, trigger          ; get value of trigger
-    cpi		   r16, 1                ; wait for a trigger to be true
-    brne	   1b
+    cpi		r16, 1                ; wait for a trigger to be true
+    brne	1b
 
     ; give all tasks a chance to run
     call	signal_task           ; measure the time from trigger to echo
@@ -19,5 +19,5 @@ main_loop:
     call	buzz_task             ; create audible indicator of distance
 
     ; reset the trigger variable
-    sts     trigger, r1
+    sts     	trigger, r1
     rjmp	main_loop

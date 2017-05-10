@@ -24,8 +24,8 @@
 .equ	one_cm,     76
 
 ; wait subroutine takes ~2 clks per iteration
-.equ	delay2,	    8				; .25 clk/us * 4
-.equ	delay10,    40				; .25 clk/us * 40
+.equ	delay2,	    8			; .25 clk/us * 4
+.equ	delay10,    40			; .25 clk/us * 40
 
 .section .data
 cm:
@@ -69,18 +69,18 @@ wait_for_echo:
 	sbi	SIGNAL_PORT, T0
 
 get_echo:
-	clr	r18					; clear counter
+	clr	r18			; clear counter
 start:
-	inc	r18					; increment counter
+	inc	r18			; increment counter
 
-	tst	r18					; is counter 0?
-	breq	done				; if overflow, r18 will be 0, exit
+	tst	r18			; is counter 0?
+	breq	done			; if overflow, r18 will be 0, exit
 
-	ldi	r17, one_cm			; load r17 with one_cm value
+	ldi	r17, one_cm		; load r17 with one_cm value
 	call	wait         		; wait # clks for one cm
 
 	sbic	SIGNAL_PIN, ECHO	; skip to done if echo clear
-	rjmp	start				; repeat if not clear
+	rjmp	start			; repeat if not clear
 done:
 	sts	cm, r18
     	ret

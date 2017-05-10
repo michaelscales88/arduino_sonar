@@ -3,8 +3,8 @@
 #include "config.inc"
 
 .equ	MAX_LED_RANGE,	81
-.equ	NUM_LED, 		8
-.equ	DIS_UNIT,		10
+.equ	NUM_LED,	8
+.equ	DIS_UNIT,	10
 
 .equ	dis0, 10
 .equ	dis1, 20
@@ -107,14 +107,14 @@ set_led:
 
 	rjmp	done
 
-1:	sbi		LED_PORT, LED0
-2:	sbi		LED_PORT, LED1
-3:	sbi		LED_PORT, LED2
-4:	sbi		LED_PORT, LED3
-5:	sbi		LED_PORT, LED4
-6:	sbi		LED_PORT, LED5
-7:	sbi		LED_PORT, LED6
-8:	sbi		LED_PORT, LED7
+1:	sbi	LED_PORT, LED0
+2:	sbi	LED_PORT, LED1
+3:	sbi	LED_PORT, LED2
+4:	sbi	LED_PORT, LED3
+5:	sbi	LED_PORT, LED4
+6:	sbi	LED_PORT, LED5
+7:	sbi	LED_PORT, LED6
+8:	sbi	LED_PORT, LED7
 
 done:
 	ret

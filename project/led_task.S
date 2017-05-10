@@ -39,70 +39,70 @@ LED_INDEX:
 
 led_init:
 	sbi     LED_DIR, LED0
-	cbi		LED_PORT, LED0
+	cbi	LED_PORT, LED0
 	sbi     LED_DIR, LED1
-	cbi		LED_PORT, LED1
+	cbi	LED_PORT, LED1
 	sbi     LED_DIR, LED2
-	cbi		LED_PORT, LED2
+	cbi	LED_PORT, LED2
 	sbi     LED_DIR, LED3
-	cbi		LED_PORT, LED3
+	cbi	LED_PORT, LED3
 	sbi     LED_DIR, LED4
-	cbi		LED_PORT, LED4
+	cbi	LED_PORT, LED4
 	sbi     LED_DIR, LED5
-	cbi		LED_PORT, LED5
+	cbi	LED_PORT, LED5
 	sbi     LED_DIR, LED6
-	cbi		LED_PORT, LED6
+	cbi	LED_PORT, LED6
 	sbi     LED_DIR, LED7
-	cbi		LED_PORT, LED7
+	cbi	LED_PORT, LED7
 
-	sbi		SIGNAL_DIR, T1
-	cbi		SIGNAL_PORT, T1
+	sbi	SIGNAL_DIR, T1
+	cbi	SIGNAL_PORT, T1
 
 	ret
 
 led_task:
-	sbi		SIGNAL_PORT, T1
+	sbi	SIGNAL_PORT, T1
 
 off:
-	cbi		LED_PORT, LED7
-	cbi		LED_PORT, LED6
-	cbi		LED_PORT, LED5
-	cbi		LED_PORT, LED4
-	cbi		LED_PORT, LED3
-	cbi		LED_PORT, LED2
-	cbi		LED_PORT, LED1
-	cbi		LED_PORT, LED0
+	cbi	LED_PORT, LED0
+	cbi	LED_PORT, LED1
+	cbi	LED_PORT, LED2
+	cbi	LED_PORT, LED3
+	cbi	LED_PORT, LED4
+	cbi	LED_PORT, LED5
+	cbi	LED_PORT, LED6
+	cbi	LED_PORT, LED7
 
-	lds		r16, cm
-	cpi		r16, MAX_LED_RANGE
+	lds	r16, cm
+	cpi	r16, MAX_LED_RANGE
 	brge	done
-	cpi		r16, 0
+	cpi	r16, 0
 	brlt	done
 
-	clr		r28
+	clr	r28
 led_loop:
-	inc		r28
+	inc	r28
 	subi	r16, DIS_UNIT
-	tst		r16
+	tst	r16
 	brlt	set_led
 	rjmp	led_loop
 
 set_led:
-	cpi		r28, 8
+	cpi	r28, 8
 	breq	8f
-	cpi		r28, 7
+	cpi	r28, 7
 	breq	7f
-	cpi		r28, 6
+	cpi	r28, 6
 	breq	6f
-	cpi		r28, 5
+	cpi	r28, 5
 	breq	5f
-	cpi		r28, 4
+	cpi	r28, 4
 	breq	4f
-	cpi		r28, 3
+	cpi	r28, 3
 	breq	3f
-	cpi		r28, 2
+	cpi	r28, 2
 	breq	2f
-	cpi		r28, 1
+	cpi	r28, 1
 	breq	1f
 
 	rjmp	done

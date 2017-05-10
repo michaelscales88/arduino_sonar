@@ -15,13 +15,13 @@
 #define LED7		7
 
 #define SIGNAL_DIR      _DDRB
-#define SIGNAL_PORT		_PORTB
-#define	SIGNAL_PIN		_PINB
+#define SIGNAL_PORT	_PORTB
+#define	SIGNAL_PIN	_PINB
 #define TRIG		0
 #define ECHO		1
-#define T0			2
-#define T1			3
+#define T0		2
+#define T1		3
 
 #define BUZZ_PIN	6
-#define BUZZ_PORT    _PORTB
-#define BUZZ_DIR    _DDRB
+#define BUZZ_PORT	_PORTB
+#define BUZZ_DIR	_DDRB

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &#8212; Team Alpha Group Project 2 1.0 documentation</title>
+    <title>Code &#8212; Team Alpha Group Project 2 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="contributions.html" />
+    <link rel="prev" title="Contributions" href="contributions.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,7 +42,449 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <div class="section" id="code">
+<h1>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h1>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">config.inc</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span><span class="c">; config.inc</span>
+
+<span class="c">#include &lt;avr/io.h&gt;</span>
+<span class="c">#include &quot;../include/AVRSpecialRegs.inc&quot;</span>
+
+<span class="c">#define LED_DIR         _DDRC</span>
+<span class="c">#define LED_PORT        _PORTC</span>
+<span class="c">#define LED0		0</span>
+<span class="c">#define LED1		1</span>
+<span class="c">#define LED2		2</span>
+<span class="c">#define LED3		3</span>
+<span class="c">#define LED4		4</span>
+<span class="c">#define LED5		5</span>
+<span class="c">#define LED6		6</span>
+<span class="c">#define LED7		7</span>
+
+<span class="c">#define SIGNAL_DIR      _DDRB</span>
+<span class="c">#define SIGNAL_PORT		_PORTB</span>
+<span class="c">#define	SIGNAL_PIN		_PINB</span>
+<span class="c">#define TRIG		0</span>
+<span class="c">#define ECHO		1</span>
+<span class="c">#define T0			2</span>
+<span class="c">#define T1			3</span>
+
+<span class="c">#define BUZZ_PIN	6</span>
+<span class="c">#define BUZZ_PORT    _PORTB</span>
+<span class="c">#define BUZZ_DIR    _DDRB</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">main.S</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span><span class="c">#include &quot;config.inc&quot;</span>
+
+    <span class="na">.section</span>    <span class="no">.text</span>
+    <span class="na">.org</span>        <span class="mi">0x00</span>
+
+    <span class="na">.global</span>     <span class="no">main</span>
+    <span class="na">.extern</span>     <span class="no">setup</span>
+    <span class="na">.extern</span>     <span class="no">main_loop</span>
+
+<span class="nl">main:</span>
+    <span class="c">; stack is set up by linker</span>
+    <span class="nf">call</span>        <span class="no">setup</span>           <span class="c">; configure the output pins</span>
+    <span class="no">call</span>        <span class="no">main_loop</span>       <span class="c">; stay in main loop forever</span>
+<span class="mi">1</span><span class="p">:</span>  <span class="no">rjmp</span>        <span class="mi">1</span><span class="no">b</span>              <span class="c">; never let your code get here</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">setup.S</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span><span class="c">; setup.S - initialize things before running</span>
+
+<span class="c">#include &quot;config.inc&quot;</span>
+
+	<span class="na">.section</span>	<span class="no">.text</span>
+
+	<span class="na">.global</span>		<span class="no">setup</span>
+   	<span class="na">.extern</span>		<span class="no">clock_init</span>
+   	<span class="na">.extern</span>		<span class="no">timer1_init</span>
+	<span class="na">.extern</span>		<span class="no">signal_init</span>
+	<span class="na">.extern</span>		<span class="no">led_init</span>
+	<span class="na">.extern</span>		<span class="no">buzz_init</span>
+
+    	<span class="c">;.extern     buzz_init</span>
+
+<span class="nl">setup:</span>
+    	<span class="nf">call</span>	<span class="no">clock_init</span>
+    	<span class="nf">call</span>	<span class="no">timer1_init</span>
+    	<span class="nf">call</span>	<span class="no">signal_init</span>
+	<span class="nf">call</span>	<span class="no">led_init</span>
+
+    	<span class="nf">call</span>	<span class="no">buzz_init</span>
+
+	<span class="nf">ret</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">clock.S</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span><span class="c">; clock.S - configure the processor clock</span>
+<span class="c">#include &quot;config.inc&quot;</span>
+
+    <span class="na">.section</span> <span class="no">.text</span>
+    <span class="na">.global</span> <span class="no">clock_init</span>
+
+<span class="nl">clock_init:</span>
+    <span class="nf">ldi</span>     <span class="no">r16</span><span class="p">,</span> <span class="mi">0x80</span>
+    <span class="nf">ldi</span>     <span class="no">r17</span><span class="p">,</span> <span class="mi">2</span>          <span class="c">; divide by 4</span>
+    <span class="no">sts</span>     <span class="no">CLKPR</span><span class="p">,</span> <span class="no">r16</span>
+    <span class="nf">sts</span>     <span class="no">CLKPR</span><span class="p">,</span> <span class="no">r17</span>      <span class="c">; set speed (4MHz)</span>
+    <span class="no">ret</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">main_loop.S</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span>#include &quot;config.inc&quot;
+
+.section    .text
+    .global    main_loop
+    .extern    signal_task
+    ;.extern    led_task
+    ;.extern    buzz_task
+    ;.extern	LCD_task
+
+main_loop:
+1:
+    lds	        r16, trigger          ; get value of trigger
+    cpi		r16, 1                ; wait for a trigger to be true
+    brne	1b
+
+    ; give all tasks a chance to run
+    call	signal_task           ; measure the time from trigger to echo
+    ;call	led_task              ; illuminate lights corresponding to distance
+    call	buzz_task             ; create audible indicator of distance
+
+    ; reset the trigger variable
+    sts     	trigger, r1
+    rjmp	main_loop
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">timer.S</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span>; timer.S
+
+#include &quot;config.inc&quot;
+
+.equ	COUNT,  250         ; interrupts per trigger event
+
+    	.section    .data
+trigger:
+    .byte       0
+
+    	.section    .text
+	.global     timer1_init
+	.global     TIMER1_COMPA_vect
+	.global     trigger
+
+timer1_init:
+	lds     r16, TCCR1B
+    	ori     r16, (1&lt;&lt;WGM12)|(1&lt;&lt;CS12)|(1&lt;&lt;CS10)            ; divide by 1024
+    	sts     TCCR1B, r16                         ; set timer clock
+    	ldi     r16, (COUNT &amp; 0xff)                 ; set in compare count
+    	sts     OCR1AL, r16
+    	ldi     r16, (COUNT &gt;&gt; 8)
+    	sts     OCR1AH, r16
+    	lds     r16, TIMSK1                         ; get interrupt mask reg
+    	ori     r16, (1&lt;&lt;OCIE1A)                    ; enable interrupt
+    	sts     TIMSK1, r16                         ; write it back
+    	sei                                         ; let the fun begin
+    	ret
+
+; timer 1 compare match interrupt service routine
+TIMER1_COMPA_vect:
+        ; save callers registers
+        push    r16
+        push    r0
+        in      r0, _SREG            ; get flags
+        push    r0
+        ;
+        ldi     r16, 1
+        sts     trigger, r16
+        ;
+        pop     r0
+        out     _SREG, r0            ; recover flags
+        pop     r0
+        pop     r16
+        reti
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">signal_task.S</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span><span class="c">; signal_task.S - setup and control for trigger and echo</span>
+<span class="c">; the HC-SR04!!!</span>
+
+<span class="c">; from http://www.ezdenki.com/ultrasonic.php :</span>
+<span class="c">; Basic Distance Calculation for Ultrasonic Sensing</span>
+<span class="c">; The speed of sound: 340.29 m/s (meters per second).</span>
+<span class="c">; The speed of sound to an object and back: 170.15 m/s.</span>
+<span class="c">; Converting from m/s to µs/cm:</span>
+<span class="c">;           s        m     1x106µs   58.772µs</span>
+<span class="c">;        ------- X ----- X ------- = --------</span>
+<span class="c">;        170.15m   100cm      s         cm</span>
+<span class="c">; Time for pulse to travel 1cm and return: 58.772µs.</span>
+
+<span class="c">; per clock.S, we&#39;re running at 1MHz</span>
+<span class="c">; 1 MHz (or 1 M clk/s) =</span>
+<span class="c">; 1 clk/us</span>
+<span class="c">; 1 clk/us * 58.772us/cm = 58.772clk/cm</span>
+
+<span class="c">; # of clicks from start of echo going to high and then starting increment cm</span>
+<span class="c">; so, 58.772clk/cm at 1MHz or 59 x 4 (at 4MHz) = 3(x) + 7, x = 76</span>
+
+<span class="c">#include &quot;config.inc&quot;</span>
+
+<span class="na">.equ</span>	<span class="no">one_cm</span><span class="p">,</span> 	<span class="mi">76</span>
+
+<span class="c">; wait subroutine takes ~2 clks per iteration</span>
+<span class="na">.equ</span>	<span class="no">delay2</span><span class="p">,</span>		<span class="mi">8</span>				<span class="c">; .25 clk/us * 4</span>
+<span class="no">.equ</span>	<span class="no">delay10</span><span class="p">,</span> 	<span class="mi">40</span>				<span class="c">; .25 clk/us * 40</span>
+
+<span class="na">.section</span> <span class="no">.data</span>
+<span class="nl">cm:</span>
+	<span class="na">.byte</span>		<span class="mi">8</span>
+
+<span class="na">.section</span> <span class="no">.text</span>
+    <span class="na">.global</span>     <span class="no">signal_init</span>
+    <span class="na">.global</span>     <span class="no">signal_task</span>
+	<span class="na">.global</span>		<span class="no">cm</span>
+
+<span class="nl">signal_init:</span>
+	<span class="nf">sbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">TRIG</span>
+	<span class="nf">cbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">ECHO</span>
+
+	<span class="nf">sbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">T0</span>
+	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
+
+    <span class="nf">ret</span>
+
+<span class="c">; data sheet for HC-SR04 call for the trigger to be on low, set to high</span>
+<span class="c">; for 10us, then set to low again, the echo pin will be set to high as soon as</span>
+<span class="c">; the trigger pin goes to low again, and stays high until</span>
+<span class="nl">signal_task:</span>
+
+	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">ECHO</span>
+
+	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set trigger low</span>
+	<span class="no">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">delay2</span>			<span class="c">; set r17 to delay2, for 2 clks(2 us)</span>
+	<span class="no">call</span>	<span class="no">wait</span>				<span class="c">; wait 2us</span>
+
+	<span class="nf">sbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set high</span>
+	<span class="no">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">delay10</span>		<span class="c">; set r17 to delay10, for 10 clks(10 us)</span>
+	<span class="no">call</span>	<span class="no">wait</span>				<span class="c">; wait 10us</span>
+
+	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set back to low</span>
+
+<span class="nl">wait_for_echo:</span>
+	<span class="nf">sbis</span>	<span class="no">SIGNAL_PIN</span><span class="p">,</span> <span class="no">ECHO</span>	<span class="c">; need to wait for start of echo to start</span>
+	<span class="no">rjmp</span>	<span class="no">wait_for_echo</span>		<span class="c">; not set? keep waiting</span>
+
+	<span class="nf">sbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
+
+<span class="nl">get_echo:</span>
+	<span class="nf">clr</span>		<span class="no">r18</span>					<span class="c">; clear counter</span>
+<span class="no">start</span><span class="p">:</span>
+	<span class="nf">inc</span>		<span class="no">r18</span>					<span class="c">; increment counter</span>
+
+	<span class="nf">tst</span>		<span class="no">r18</span>					<span class="c">; is counter 0?</span>
+	<span class="no">breq</span>	<span class="no">done</span>				<span class="c">; if overflow, r18 will be 0, exit</span>
+
+	<span class="nf">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">one_cm</span>			<span class="c">; load r17 with one_cm value</span>
+	<span class="no">call</span>	<span class="no">wait</span>         		<span class="c">; wait # clks for one cm</span>
+
+	<span class="nf">sbic</span>	<span class="no">SIGNAL_PIN</span><span class="p">,</span> <span class="no">ECHO</span>	<span class="c">; skip to done if echo clear</span>
+	<span class="no">rjmp</span>	<span class="no">start</span>				<span class="c">; repeat if not clear</span>
+<span class="no">done</span><span class="p">:</span>
+	<span class="nf">sts</span>		<span class="no">cm</span><span class="p">,</span> <span class="no">r18</span>
+    <span class="nf">ret</span>
+
+<span class="c">; wait subroutine</span>
+<span class="nl">wait:</span>
+	<span class="nf">dec</span>      <span class="no">r17</span>
+	<span class="nf">brne</span>     <span class="no">wait</span>
+	<span class="nf">ret</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">led_task.S</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span>; led task, light up them LEDs
+
+#include &quot;config.inc&quot;
+
+.equ	MAX_LED_RANGE,	81
+.equ	NUM_LED, 		8
+.equ	DIS_UNIT,		10
+
+.equ	dis0, 10
+.equ	dis1, 20
+.equ	dis2, 30
+.equ	dis3, 40
+.equ	dis4, 50
+.equ	dis5, 60
+.equ	dis6, 70
+.equ	dis7, 80
+
+#DEFINE r17 = dis0
+#DEFINE r18 = dis1
+#DEFINE r19 = dis2
+#DEFINE r20 = dis3
+#DEFINE r21 = dis4
+#DEFINE r22 = dis5
+#DEFINE r23 = dis6
+#DEFINE r24 = dis7
+
+#DEFINE r25 = MAX_LED_RANGE
+#DEFINE r26 = NUM_LED
+#DEFINE r27 = DIS_UNIT
+
+.section .data
+LED_INDEX:
+	.byte	4
+
+.section .text
+	.global led_init
+	.global led_task
+	.extern	cm
+
+led_init:
+	sbi     LED_DIR, LED0
+	cbi		LED_PORT, LED0
+	sbi     LED_DIR, LED1
+	cbi		LED_PORT, LED1
+	sbi     LED_DIR, LED2
+	cbi		LED_PORT, LED2
+	sbi     LED_DIR, LED3
+	cbi		LED_PORT, LED3
+	sbi     LED_DIR, LED4
+	cbi		LED_PORT, LED4
+	sbi     LED_DIR, LED5
+	cbi		LED_PORT, LED5
+	sbi     LED_DIR, LED6
+	cbi		LED_PORT, LED6
+	sbi     LED_DIR, LED7
+	cbi		LED_PORT, LED7
+
+	sbi		SIGNAL_DIR, T1
+	cbi		SIGNAL_PORT, T1
+
+	ret
+
+led_task:
+	sbi		SIGNAL_PORT, T1
+
+off:
+	cbi		LED_PORT, LED7
+	cbi		LED_PORT, LED6
+	cbi		LED_PORT, LED5
+	cbi		LED_PORT, LED4
+	cbi		LED_PORT, LED3
+	cbi		LED_PORT, LED2
+	cbi		LED_PORT, LED1
+	cbi		LED_PORT, LED0
+
+	lds		r16, cm
+	cpi		r16, MAX_LED_RANGE
+	brge	done
+	cpi		r16, 0
+	brlt	done
+
+	clr		r28
+led_loop:
+	inc		r28
+	subi	r16, DIS_UNIT
+	tst		r16
+	brlt	set_led
+	rjmp	led_loop
+
+set_led:
+	cpi		r28, 8
+	breq	8f
+	cpi		r28, 7
+	breq	7f
+	cpi		r28, 6
+	breq	6f
+	cpi		r28, 5
+	breq	5f
+	cpi		r28, 4
+	breq	4f
+	cpi		r28, 3
+	breq	3f
+	cpi		r28, 2
+	breq	2f
+	cpi		r28, 1
+	breq	1f
+
+	rjmp	done
+
+1:	sbi		LED_PORT, LED0
+2:	sbi		LED_PORT, LED1
+3:	sbi		LED_PORT, LED2
+4:	sbi		LED_PORT, LED3
+5:	sbi		LED_PORT, LED4
+6:	sbi		LED_PORT, LED5
+7:	sbi		LED_PORT, LED6
+8:	sbi		LED_PORT, LED7
+
+done:
+	ret
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">buzz_task.S</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-asm"><div class="highlight"><pre><span></span>;buzz task
+
+#include &quot;config.inc&quot;
+
+        .section    .text
+	.global	    buzz_init
+	.global     buzz_task
+	.extern	    cm
+
+buzz_init:
+	sbi         BUZZ_DIR, BUZZ_PIN
+    	cbi         BUZZ_PORT, BUZZ_PIN
+	ret
+
+buzz_task:
+	;try loading r16 with cm and observe how the tick rate changes based on sonar
+	;~255 = slow tick, ~30 = fastest tick available
+	;(not linear)
+
+    	lds         r16, cm  ;temporarily set to 255. varies based on cm
+1:
+    	ldi         r17, 50   ;locked in @ 50
+2:
+    	ldi         r18, 50   ;locked in @ 50
+3:
+    	dec         r18
+    	brne        3b
+    	dec         r17
+    	brne        2b
+    	dec         r16
+    	brne        1b
+
+    	in          r16, BUZZ_PORT
+    	ldi         r21, (1 &lt;&lt; BUZZ_PIN)
+    	eor         r16, r21
+    	out         BUZZ_PORT, r16
+	ret
+</pre></div>
+</div>
+</div>
+</div>
+
 
           </div>
         </div>
@@ -52,7 +494,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="contributions.html" title="previous chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="contributions.html" title="previous chapter">Contributions</a></li>
   </ul></li>
 </ul>
 </div>

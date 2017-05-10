@@ -50,7 +50,7 @@ This value is then stored in the global variable cm. Based on this value, the LE
 +---------------+---------------+
 |1              | 70 - 80       |
 +---------------+---------------+
-|0              | < 80          |
+|0              | > 80          |
 +---------------+---------------+
 
 The buzzer is activated in a similar fashion, with the delay between successive clicks of the buzzer being determined by the value held in cm. The result is a device that indicates both audibly and visually how far away an object is.

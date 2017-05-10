@@ -23,3 +23,5 @@
 #define T1			3
 
 #define BUZZ_PIN	6
+#define BUZZ_PORT    _PORTB
+#define BUZZ_DIR    _DDRB

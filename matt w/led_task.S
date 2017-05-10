@@ -55,23 +55,23 @@ led_task:
 	sts		LED_COUNT, 0
 
 led_loop:
-	ldi		r18, LED_COUNT
-	sts		LED_INDEX, r18
-
-	inc		r18
-	sts		LED_COUNT, r18
-
-	cpi		r18, NUM_LEDS
-	brge	done
-
-	mul		r18, DIS_UNIT
-	movw	r20, r0
-	sts		DIS_VAL, r19
-
-	lds		r18, LED_INDEX
-	cpi		r17, DIS_VAL
-	brge	toggle_on
-	brlo	toggle_off
+	; ldi		r18, LED_COUNT
+	; sts		LED_INDEX, r18
+	;
+	; inc		r18
+	; sts		LED_COUNT, r18
+	;
+	; cpi		r18, NUM_LEDS
+	; brge	done
+	;
+	; mul		r18, DIS_UNIT
+	; movw	r20, r0
+	; sts		DIS_VAL, r19
+	;
+	; lds		r18, LED_INDEX
+	; cpi		r17, DIS_VAL
+	; brge	toggle_on
+	; brlo	toggle_off
 
 	rjmp	led_loop
 

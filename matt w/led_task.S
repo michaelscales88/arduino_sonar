@@ -63,10 +63,6 @@ led_init:
 led_task:
 	sbi		SIGNAL_PORT, T1
 
-	lds		r16, cm
-	cpi		r16, MAX_LED_RANGE
-	brge	done
-
 off:
 	cbi		LED_PORT, LED7
 	cbi		LED_PORT, LED6
@@ -76,6 +72,12 @@ off:
 	cbi		LED_PORT, LED2
 	cbi		LED_PORT, LED1
 	cbi		LED_PORT, LED0
+
+	lds		r16, cm
+	cpi		r16, MAX_LED_RANGE
+	brge	done
+	cpi		r16, 0
+	brlt	done
 
 	clr		r28
 led_loop:

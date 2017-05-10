@@ -16,76 +16,74 @@
 ; 1 clk/us
 ; 1 clk/us * 58.772us/cm = 58.772clk/cm
 
-; # of clicks from start of echo going to high and then starting
-; wait = 6
-; # of clicks of wait = 2(r17) + 1
-; so, 58.772clk/cm or 59 = 3(x) + 7, x = 26
+; # of clicks from start of echo going to high and then starting increment cm
+; so, 58.772clk/cm at 1MHz or 59 x 4 (at 4MHz) = 3(x) + 7, x = 76
 
 #include "config.inc"
 
-.equ	one_cm, 76
+.equ	one_cm, 	76
 
 ; wait subroutine takes ~2 clks per iteration
-.equ	delay2, 4				; 1 clk/us * 1
-.equ	delay10, 20				; 1 clk/us * 10
+.equ	delay2,		8				; .25 clk/us * 4
+.equ	delay10, 	40				; .25 clk/us * 40
 
 .section .data
 cm:
 	.byte		8
 
 .section .text
-    	.global     signal_init
-    	.global     signal_task
-    	.global		cm
+    .global     signal_init
+    .global     signal_task
+	.global		cm
 
 signal_init:
-	sbi	SIGNAL_DIR, TRIG
-	cbi	SIGNAL_DIR, ECHO
+	sbi		SIGNAL_DIR, TRIG
+	cbi		SIGNAL_DIR, ECHO
 
-	sbi	SIGNAL_DIR, T0
-	cbi	SIGNAL_PORT, T0
+	sbi		SIGNAL_DIR, T0
+	cbi		SIGNAL_PORT, T0
 
-    	ret
+    ret
 
 ; data sheet for HC-SR04 call for the trigger to be on low, set to high
 ; for 10us, then set to low again, the echo pin will be set to high as soon as
 ; the trigger pin goes to low again, and stays high until
 signal_task:
 
-	cbi	SIGNAL_PORT, ECHO
+	cbi		SIGNAL_PORT, ECHO
 
-	cbi	SIGNAL_PORT, TRIG	; set trigger low
-	ldi	r17, delay2		; set r17 to delay2, for 2 clks(2 us)
-	call	wait			; wait 2us
+	cbi		SIGNAL_PORT, TRIG	; set trigger low
+	ldi		r17, delay2			; set r17 to delay2, for 2 clks(2 us)
+	call	wait				; wait 2us
 
-	call	buzz_task
-	sbi	SIGNAL_PORT, TRIG	; set high
-	ldi	r17, delay10		; set r17 to delay10, for 10 clks(10 us)
-	call	wait			; wait 10us
+	sbi		SIGNAL_PORT, TRIG	; set high
+	ldi		r17, delay10		; set r17 to delay10, for 10 clks(10 us)
+	call	wait				; wait 10us
 
-	cbi	SIGNAL_PORT, TRIG	; set back to low
+	cbi		SIGNAL_PORT, TRIG	; set back to low
 
 wait_for_echo:
 	sbis	SIGNAL_PIN, ECHO	; need to wait for start of echo to start
 	rjmp	wait_for_echo		; not set? keep waiting
 
-	sbi	SIGNAL_PORT, T0
+	sbi		SIGNAL_PORT, T0
 
 get_echo:
-	clr	r18				; clear counter
+	clr		r18					; clear counter
 start:
-	inc	r18				; increment counter
-	tst	r18				; is counter 0?
-	breq	done			; if overflow, r18 will be 0, exit
+	inc		r18					; increment counter
 
-	ldi	r17, one_cm			; load r17 with one_cm value
-	call	wait         	; wait # clks for one cm
+	tst		r18					; is counter 0?
+	breq	done				; if overflow, r18 will be 0, exit
 
-	sbic	SIGNAL_PIN, ECHO ; skip to done if echo clear
-	rjmp	start			; repeat if not clear
+	ldi		r17, one_cm			; load r17 with one_cm value
+	call	wait         		; wait # clks for one cm
+
+	sbic	SIGNAL_PIN, ECHO	; skip to done if echo clear
+	rjmp	start				; repeat if not clear
 done:
-	sts	cm, r18
-    	ret
+	sts		cm, r18
+    ret
 
 ; wait subroutine
 wait:

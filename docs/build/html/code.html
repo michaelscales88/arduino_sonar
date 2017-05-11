@@ -63,16 +63,16 @@
 <span class="c">#define LED7		7</span>
 
 <span class="c">#define SIGNAL_DIR      _DDRB</span>
-<span class="c">#define SIGNAL_PORT		_PORTB</span>
-<span class="c">#define	SIGNAL_PIN		_PINB</span>
+<span class="c">#define SIGNAL_PORT	_PORTB</span>
+<span class="c">#define	SIGNAL_PIN	_PINB</span>
 <span class="c">#define TRIG		0</span>
 <span class="c">#define ECHO		1</span>
-<span class="c">#define T0			2</span>
-<span class="c">#define T1			3</span>
+<span class="c">#define T0		2</span>
+<span class="c">#define T1		3</span>
 
 <span class="c">#define BUZZ_PIN	6</span>
-<span class="c">#define BUZZ_PORT    _PORTB</span>
-<span class="c">#define BUZZ_DIR    _DDRB</span>
+<span class="c">#define BUZZ_PORT	_PORTB</span>
+<span class="c">#define BUZZ_DIR	_DDRB</span>
 </pre></div>
 </div>
 </div>
@@ -110,16 +110,12 @@
 	<span class="na">.extern</span>		<span class="no">led_init</span>
 	<span class="na">.extern</span>		<span class="no">buzz_init</span>
 
-    	<span class="c">;.extern     buzz_init</span>
-
 <span class="nl">setup:</span>
-    	<span class="nf">call</span>	<span class="no">clock_init</span>
-    	<span class="nf">call</span>	<span class="no">timer1_init</span>
-    	<span class="nf">call</span>	<span class="no">signal_init</span>
-	<span class="nf">call</span>	<span class="no">led_init</span>
-
-    	<span class="nf">call</span>	<span class="no">buzz_init</span>
-
+    	<span class="nf">call</span>		<span class="no">clock_init</span>
+    	<span class="nf">call</span>		<span class="no">timer1_init</span>
+    	<span class="nf">call</span>		<span class="no">signal_init</span>
+	<span class="nf">call</span>		<span class="no">led_init</span>
+    	<span class="nf">call</span>		<span class="no">buzz_init</span>
 	<span class="nf">ret</span>
 </pre></div>
 </div>
@@ -148,9 +144,8 @@
 .section    .text
     .global    main_loop
     .extern    signal_task
-    ;.extern    led_task
-    ;.extern    buzz_task
-    ;.extern	LCD_task
+    .extern    led_task
+    .extern    buzz_task
 
 main_loop:
 1:
@@ -160,7 +155,7 @@ main_loop:
 
     ; give all tasks a chance to run
     call	signal_task           ; measure the time from trigger to echo
-    ;call	led_task              ; illuminate lights corresponding to distance
+    call	led_task              ; illuminate lights corresponding to distance
     call	buzz_task             ; create audible indicator of distance
 
     ; reset the trigger variable
@@ -175,11 +170,11 @@ main_loop:
 
 #include &quot;config.inc&quot;
 
-.equ	COUNT,  250         ; interrupts per trigger event
+.equ	COUNT,  250         			; interrupts per trigger event
 
     	.section    .data
 trigger:
-    .byte       0
+    	.byte       0
 
     	.section    .text
 	.global     timer1_init
@@ -188,16 +183,16 @@ trigger:
 
 timer1_init:
 	lds     r16, TCCR1B
-    	ori     r16, (1&lt;&lt;WGM12)|(1&lt;&lt;CS12)|(1&lt;&lt;CS10)            ; divide by 1024
-    	sts     TCCR1B, r16                         ; set timer clock
-    	ldi     r16, (COUNT &amp; 0xff)                 ; set in compare count
+    	ori     r16, (1&lt;&lt;WGM12)|(1&lt;&lt;CS12)|(1&lt;&lt;CS10)	; divide by 1024
+    	sts     TCCR1B, r16				; set timer clock
+    	ldi     r16, (COUNT &amp; 0xff)			; set in compare count
     	sts     OCR1AL, r16
     	ldi     r16, (COUNT &gt;&gt; 8)
     	sts     OCR1AH, r16
-    	lds     r16, TIMSK1                         ; get interrupt mask reg
-    	ori     r16, (1&lt;&lt;OCIE1A)                    ; enable interrupt
-    	sts     TIMSK1, r16                         ; write it back
-    	sei                                         ; let the fun begin
+    	lds     r16, TIMSK1				; get interrupt mask reg
+    	ori     r16, (1&lt;&lt;OCIE1A)			; enable interrupt
+    	sts     TIMSK1, r16				; write it back
+    	sei						; let the fun begin
     	ret
 
 ; timer 1 compare match interrupt service routine
@@ -205,14 +200,14 @@ TIMER1_COMPA_vect:
         ; save callers registers
         push    r16
         push    r0
-        in      r0, _SREG            ; get flags
+        in      r0, _SREG				; get flags
         push    r0
         ;
         ldi     r16, 1
         sts     trigger, r16
         ;
         pop     r0
-        out     _SREG, r0            ; recover flags
+        out     _SREG, r0				; recover flags
         pop     r0
         pop     r16
         reti
@@ -244,69 +239,69 @@ TIMER1_COMPA_vect:
 
 <span class="c">#include &quot;config.inc&quot;</span>
 
-<span class="na">.equ</span>	<span class="no">one_cm</span><span class="p">,</span> 	<span class="mi">76</span>
+<span class="na">.equ</span>	<span class="no">one_cm</span><span class="p">,</span>     <span class="mi">76</span>
 
 <span class="c">; wait subroutine takes ~2 clks per iteration</span>
-<span class="na">.equ</span>	<span class="no">delay2</span><span class="p">,</span>		<span class="mi">8</span>				<span class="c">; .25 clk/us * 4</span>
-<span class="no">.equ</span>	<span class="no">delay10</span><span class="p">,</span> 	<span class="mi">40</span>				<span class="c">; .25 clk/us * 40</span>
+<span class="na">.equ</span>	<span class="no">delay2</span><span class="p">,</span>	    <span class="mi">8</span>			<span class="c">; .25 clk/us * 4</span>
+<span class="no">.equ</span>	<span class="no">delay10</span><span class="p">,</span>    <span class="mi">40</span>			<span class="c">; .25 clk/us * 40</span>
 
 <span class="na">.section</span> <span class="no">.data</span>
 <span class="nl">cm:</span>
-	<span class="na">.byte</span>		<span class="mi">8</span>
+	<span class="na">.byte</span>	    <span class="mi">8</span>
 
 <span class="na">.section</span> <span class="no">.text</span>
-    <span class="na">.global</span>     <span class="no">signal_init</span>
-    <span class="na">.global</span>     <span class="no">signal_task</span>
-	<span class="na">.global</span>		<span class="no">cm</span>
+    	<span class="na">.global</span>     <span class="no">signal_init</span>
+    	<span class="na">.global</span>     <span class="no">signal_task</span>
+	<span class="na">.global</span>	    <span class="no">cm</span>
 
 <span class="nl">signal_init:</span>
-	<span class="nf">sbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">TRIG</span>
-	<span class="nf">cbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">ECHO</span>
+	<span class="nf">sbi</span>	<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">TRIG</span>
+	<span class="nf">cbi</span>	<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">ECHO</span>
 
-	<span class="nf">sbi</span>		<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">T0</span>
-	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
+	<span class="nf">sbi</span>	<span class="no">SIGNAL_DIR</span><span class="p">,</span> <span class="no">T0</span>
+	<span class="nf">cbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
 
-    <span class="nf">ret</span>
+    	<span class="nf">ret</span>
 
 <span class="c">; data sheet for HC-SR04 call for the trigger to be on low, set to high</span>
 <span class="c">; for 10us, then set to low again, the echo pin will be set to high as soon as</span>
 <span class="c">; the trigger pin goes to low again, and stays high until</span>
 <span class="nl">signal_task:</span>
 
-	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">ECHO</span>
+	<span class="nf">cbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">ECHO</span>
 
-	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set trigger low</span>
-	<span class="no">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">delay2</span>			<span class="c">; set r17 to delay2, for 2 clks(2 us)</span>
-	<span class="no">call</span>	<span class="no">wait</span>				<span class="c">; wait 2us</span>
+	<span class="nf">cbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set trigger low</span>
+	<span class="no">ldi</span>	<span class="no">r17</span><span class="p">,</span> <span class="no">delay2</span>		<span class="c">; set r17 to delay2, for 2 clks(2 us)</span>
+	<span class="no">call</span>	<span class="no">wait</span>			<span class="c">; wait 2us</span>
 
-	<span class="nf">sbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set high</span>
-	<span class="no">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">delay10</span>		<span class="c">; set r17 to delay10, for 10 clks(10 us)</span>
-	<span class="no">call</span>	<span class="no">wait</span>				<span class="c">; wait 10us</span>
+	<span class="nf">sbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set high</span>
+	<span class="no">ldi</span>	<span class="no">r17</span><span class="p">,</span> <span class="no">delay10</span>		<span class="c">; set r17 to delay10, for 10 clks(10 us)</span>
+	<span class="no">call</span>	<span class="no">wait</span>			<span class="c">; wait 10us</span>
 
-	<span class="nf">cbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set back to low</span>
+	<span class="nf">cbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">TRIG</span>	<span class="c">; set back to low</span>
 
 <span class="nl">wait_for_echo:</span>
 	<span class="nf">sbis</span>	<span class="no">SIGNAL_PIN</span><span class="p">,</span> <span class="no">ECHO</span>	<span class="c">; need to wait for start of echo to start</span>
 	<span class="no">rjmp</span>	<span class="no">wait_for_echo</span>		<span class="c">; not set? keep waiting</span>
 
-	<span class="nf">sbi</span>		<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
+	<span class="nf">sbi</span>	<span class="no">SIGNAL_PORT</span><span class="p">,</span> <span class="no">T0</span>
 
 <span class="nl">get_echo:</span>
-	<span class="nf">clr</span>		<span class="no">r18</span>					<span class="c">; clear counter</span>
+	<span class="nf">clr</span>	<span class="no">r18</span>			<span class="c">; clear counter</span>
 <span class="no">start</span><span class="p">:</span>
-	<span class="nf">inc</span>		<span class="no">r18</span>					<span class="c">; increment counter</span>
+	<span class="nf">inc</span>	<span class="no">r18</span>			<span class="c">; increment counter</span>
 
-	<span class="nf">tst</span>		<span class="no">r18</span>					<span class="c">; is counter 0?</span>
-	<span class="no">breq</span>	<span class="no">done</span>				<span class="c">; if overflow, r18 will be 0, exit</span>
+	<span class="nf">tst</span>	<span class="no">r18</span>			<span class="c">; is counter 0?</span>
+	<span class="no">breq</span>	<span class="no">done</span>			<span class="c">; if overflow, r18 will be 0, exit</span>
 
-	<span class="nf">ldi</span>		<span class="no">r17</span><span class="p">,</span> <span class="no">one_cm</span>			<span class="c">; load r17 with one_cm value</span>
+	<span class="nf">ldi</span>	<span class="no">r17</span><span class="p">,</span> <span class="no">one_cm</span>		<span class="c">; load r17 with one_cm value</span>
 	<span class="no">call</span>	<span class="no">wait</span>         		<span class="c">; wait # clks for one cm</span>
 
 	<span class="nf">sbic</span>	<span class="no">SIGNAL_PIN</span><span class="p">,</span> <span class="no">ECHO</span>	<span class="c">; skip to done if echo clear</span>
-	<span class="no">rjmp</span>	<span class="no">start</span>				<span class="c">; repeat if not clear</span>
+	<span class="no">rjmp</span>	<span class="no">start</span>			<span class="c">; repeat if not clear</span>
 <span class="no">done</span><span class="p">:</span>
-	<span class="nf">sts</span>		<span class="no">cm</span><span class="p">,</span> <span class="no">r18</span>
-    <span class="nf">ret</span>
+	<span class="nf">sts</span>	<span class="no">cm</span><span class="p">,</span> <span class="no">r18</span>
+    	<span class="nf">ret</span>
 
 <span class="c">; wait subroutine</span>
 <span class="nl">wait:</span>
@@ -323,8 +318,8 @@ TIMER1_COMPA_vect:
 #include &quot;config.inc&quot;
 
 .equ	MAX_LED_RANGE,	81
-.equ	NUM_LED, 		8
-.equ	DIS_UNIT,		10
+.equ	NUM_LED,	8
+.equ	DIS_UNIT,	10
 
 .equ	dis0, 10
 .equ	dis1, 20
@@ -359,82 +354,82 @@ LED_INDEX:
 
 led_init:
 	sbi     LED_DIR, LED0
-	cbi		LED_PORT, LED0
+	cbi	LED_PORT, LED0
 	sbi     LED_DIR, LED1
-	cbi		LED_PORT, LED1
+	cbi	LED_PORT, LED1
 	sbi     LED_DIR, LED2
-	cbi		LED_PORT, LED2
+	cbi	LED_PORT, LED2
 	sbi     LED_DIR, LED3
-	cbi		LED_PORT, LED3
+	cbi	LED_PORT, LED3
 	sbi     LED_DIR, LED4
-	cbi		LED_PORT, LED4
+	cbi	LED_PORT, LED4
 	sbi     LED_DIR, LED5
-	cbi		LED_PORT, LED5
+	cbi	LED_PORT, LED5
 	sbi     LED_DIR, LED6
-	cbi		LED_PORT, LED6
+	cbi	LED_PORT, LED6
 	sbi     LED_DIR, LED7
-	cbi		LED_PORT, LED7
+	cbi	LED_PORT, LED7
 
-	sbi		SIGNAL_DIR, T1
-	cbi		SIGNAL_PORT, T1
+	sbi	SIGNAL_DIR, T1
+	cbi	SIGNAL_PORT, T1
 
 	ret
 
 led_task:
-	sbi		SIGNAL_PORT, T1
+	sbi	SIGNAL_PORT, T1
 
 off:
-	cbi		LED_PORT, LED7
-	cbi		LED_PORT, LED6
-	cbi		LED_PORT, LED5
-	cbi		LED_PORT, LED4
-	cbi		LED_PORT, LED3
-	cbi		LED_PORT, LED2
-	cbi		LED_PORT, LED1
-	cbi		LED_PORT, LED0
+	cbi	LED_PORT, LED0
+	cbi	LED_PORT, LED1
+	cbi	LED_PORT, LED2
+	cbi	LED_PORT, LED3
+	cbi	LED_PORT, LED4
+	cbi	LED_PORT, LED5
+	cbi	LED_PORT, LED6
+	cbi	LED_PORT, LED7
 
-	lds		r16, cm
-	cpi		r16, MAX_LED_RANGE
+	lds	r16, cm
+	cpi	r16, MAX_LED_RANGE
 	brge	done
-	cpi		r16, 0
+	cpi	r16, 0
 	brlt	done
 
-	clr		r28
+	clr	r28
 led_loop:
-	inc		r28
+	inc	r28
 	subi	r16, DIS_UNIT
-	tst		r16
+	tst	r16
 	brlt	set_led
 	rjmp	led_loop
 
 set_led:
-	cpi		r28, 8
+	cpi	r28, 8
 	breq	8f
-	cpi		r28, 7
+	cpi	r28, 7
 	breq	7f
-	cpi		r28, 6
+	cpi	r28, 6
 	breq	6f
-	cpi		r28, 5
+	cpi	r28, 5
 	breq	5f
-	cpi		r28, 4
+	cpi	r28, 4
 	breq	4f
-	cpi		r28, 3
+	cpi	r28, 3
 	breq	3f
-	cpi		r28, 2
+	cpi	r28, 2
 	breq	2f
-	cpi		r28, 1
+	cpi	r28, 1
 	breq	1f
 
 	rjmp	done
 
-1:	sbi		LED_PORT, LED0
-2:	sbi		LED_PORT, LED1
-3:	sbi		LED_PORT, LED2
-4:	sbi		LED_PORT, LED3
-5:	sbi		LED_PORT, LED4
-6:	sbi		LED_PORT, LED5
-7:	sbi		LED_PORT, LED6
-8:	sbi		LED_PORT, LED7
+1:	sbi	LED_PORT, LED0
+2:	sbi	LED_PORT, LED1
+3:	sbi	LED_PORT, LED2
+4:	sbi	LED_PORT, LED3
+5:	sbi	LED_PORT, LED4
+6:	sbi	LED_PORT, LED5
+7:	sbi	LED_PORT, LED6
+8:	sbi	LED_PORT, LED7
 
 done:
 	ret
@@ -453,21 +448,19 @@ done:
 	.extern	    cm
 
 buzz_init:
+	; buzz setup
 	sbi         BUZZ_DIR, BUZZ_PIN
     	cbi         BUZZ_PORT, BUZZ_PIN
 	ret
 
 buzz_task:
-	;try loading r16 with cm and observe how the tick rate changes based on sonar
-	;~255 = slow tick, ~30 = fastest tick available
-	;(not linear)
-
-    	lds         r16, cm  ;temporarily set to 255. varies based on cm
+    	lds         r16, cm   ;outer loop varies based on cm(distance)
 1:
     	ldi         r17, 50   ;locked in @ 50
 2:
     	ldi         r18, 50   ;locked in @ 50
 3:
+	;begin decrements
     	dec         r18
     	brne        3b
     	dec         r17
@@ -475,7 +468,8 @@ buzz_task:
     	dec         r16
     	brne        1b
 
-    	in          r16, BUZZ_PORT
+	; activate buzzer
+    	in          r16, BUZZ_PORT	
     	ldi         r21, (1 &lt;&lt; BUZZ_PIN)
     	eor         r16, r21
     	out         BUZZ_PORT, r16
